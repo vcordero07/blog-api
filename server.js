@@ -1,33 +1,26 @@
+
 const express = require('express');
 const router = express.Router();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 
-const {BlogPost} = require('./models');
+const {BlogPosts} = require('./models');
 
 const jsonParser = bodyParser.json();
 const app = express();
 
 app.use(morgan('common'));
 
-BlogPost.create(
-  'sampleTitle', 'sampleContent', 'sampleAuthor'
-);
-
-BlogPost.create(
-  'sampleTitle2', 'sampleContent2', 'sampleAuthor2'
-);
-
-BlogPost.create(
-  'sampleTitle3', 'sampleContent3', 'sampleAuthor3'
-);
+BlogPosts.create('sampleTitle1', 'sampleContent1', 'sampleAuthor1', 'publishDatedate');
+BlogPosts.create('sampleTitle2', 'sampleContent2', 'sampleAuthor2', 'publishDatedate');
+BlogPosts.create('sampleTitle3', 'sampleContent3', 'sampleAuthor3', 'publishDatedate');
 
 app.get('/blog-post', (req, res) => {
   res.json(BlogPosts.get());
 });
 
 app.post('/blog-post', jsonParser, (req, res) => {
-  const requiredFields = ['title','content','author'];
+  const requiredFields = ['title', 'content', 'author', 'date'];
   for (let i=0; i<requiredFields.length; i++){
     const field = requiredFields[i];
     if (!(field in req.body)) {
@@ -36,12 +29,12 @@ app.post('/blog-post', jsonParser, (req, res) => {
       return res.status(400).send(message);
     }
   }
-  const item = BlogPost.create(req.body.title, req.body.content, req.body.author);
+  const item = BlogPosts.create(req.body.title, req.body.content, req.body.author);
   res.status(201).json(item);
 });
 
 app.put('/blog-post/:id', jsonParser, (req, res) => {
-  const requiredFields = ['title','content','author', 'id'];
+  const requiredFields = ['title', 'content', 'author', 'date', 'id'];
   for (let i=0; i<requiredFields.length; i++) {
     const field = requiredFields[i];
     if (!(field in req.body)) {
@@ -60,7 +53,8 @@ app.put('/blog-post/:id', jsonParser, (req, res) => {
     id: req.params.id,
     title: req.body.title,
     content: req.body.content,
-    author: req.body.author
+    author: req.body.author,
+    date: req.body.date
   });
   res.status(204).end();
 });
