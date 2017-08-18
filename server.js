@@ -1,20 +1,13 @@
-
 const express = require('express');
 const morgan = require('morgan');
 
-const app = express();
-
 const blogPostRouter = require('./blogPostRouter');
+
+const app = express();
 
 app.use(morgan('common'));
 
-app.use(express.static('public'));
-
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/views/index.html');
-});
-
-app.use('/shopping-list', blogPostRouter);
+app.use('/blog-post', blogPostRouter);
 
 
 let server;
@@ -49,4 +42,8 @@ if (require.main === module) {
   runServer().catch(err => console.error(err));
 };
 
-module.exports = {app, runServer, closeServer};
+module.exports = {
+  app,
+  runServer,
+  closeServer
+};
