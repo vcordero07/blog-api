@@ -22,7 +22,7 @@ describe('Blog Posts', function() {
 
   it('should list items on GET', function() {
     return chai.request(app)
-      .get('/blog-posts')
+      .get('/blog-post')
       .then(function(res) {
         res.should.have.status(200);
         res.should.be.json;
@@ -47,23 +47,23 @@ describe('Blog Posts', function() {
     const expectedKeys = ['id', 'publishDate'].concat(Object.keys(newItem));
 
     return chai.request(app)
-      .post('/blog-posts')
-      .send(newPost)
+      .post('/blog-post')
+      .send(newItem)
       .then(function(res) {
         res.should.have.status(201);
         res.should.be.json;
         res.body.should.be.a('object');
         res.body.should.have.all.keys(expectedKeys);
-        res.body.title.should.equal(newPost.title);
-        res.body.content.should.equal(newPost.content);
-        res.body.author.should.equal(newPost.author)
+        res.body.title.should.equal(newItem.title);
+        res.body.content.should.equal(newItem.content);
+        res.body.author.should.equal(newItem.author)
       });
   });
 
   it('should error if POST missing expected values', function() {
     const badRequestData = {};
     return chai.request(app)
-      .post('/blog-posts')
+      .post('/blog-post')
       .send(badRequestData)
       .catch(function(res) {
         res.should.have.status(400);
@@ -73,14 +73,14 @@ describe('Blog Posts', function() {
   it('should update blog posts on PUT', function() {
 
     return chai.request(app)
-      .get('/blog-posts')
+      .get('/blog-post')
       .then(function(res) {
         const updatedPost = Object.assign(res.body[0], {
           title: 'Mangu',
           content: 'aplatanado'
         });
         return chai.request(app)
-          .put(`/blog-posts/${res.body[0].id}`)
+          .put(`/blog-post/${res.body[0].id}`)
           .send(updatedPost)
           .then(function(res) {
             res.should.have.status(204);
@@ -91,10 +91,10 @@ describe('Blog Posts', function() {
 
   it('should delete posts on DELETE', function() {
     return chai.request(app)
-      .get('/blog-posts')
+      .get('/blog-post')
       .then(function(res) {
         return chai.request(app)
-          .delete(`/blog-posts/${res.body[0].id}`)
+          .delete(`/blog-post/${res.body[0].id}`)
           .then(function(res) {
             res.should.have.status(204);
           });
